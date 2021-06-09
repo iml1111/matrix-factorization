@@ -8,14 +8,9 @@ def define_argparser():
     p = argparse.ArgumentParser()
 
     p.add_argument(
-        '--modle_fn',
-        default="./model.pth",
-        help="model file name for saving."
-    )
-    p.add_argument(
         '--k',
         type=int,
-        help='latent factor.'
+        help='latent factor size.'
     )
     p.add_argument(
         '--n_epochs',
@@ -33,17 +28,17 @@ def define_argparser():
         '--beta',
         type=float,
         default=0.01,
-        help='regularization parameter'
+        help='regularization parameter.'
     )
     p.add_argument(
         '--svd',
         action='store_true',
-        help='SVD Algorithm.'
+        help='Use SVD Algorithm.'
     )
     p.add_argument(
         '--sgd',
         action='store_true',
-        help='SGD Algorithm'
+        help='Use SGD Algorithm'
     )
 
     return p.parse_args()
@@ -66,9 +61,11 @@ def main(config):
             config.beta,
             config.n_epochs
         )
+    else:
+        raise RuntimeError('Algorithm No Selected')
 
     trainer.train()
-    print("RMSE:", trainer.evaluate())
+    print("Last RMSE:", trainer.evaluate())
 
 
 if __name__ == '__main__':

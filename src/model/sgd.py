@@ -8,13 +8,14 @@ class SGD:
     def __init__(self, sparse_matrix, K, lr, beta, n_epochs):
         """
         Arguments
-        - sparse_matrix (ndarray)   : user-item rating matrix
+        - sparse_matrix : user-item rating matrix
         - K (int)       : number of latent dimensions
         - lr (float) : learning rate
         - beta (float)  : regularization parameter
+        - n_epochs (int) : Num of Iteration
         """
         # convert ndArray
-        self.sparse_matrix = sparse_matrix.to_numpy()
+        self.sparse_matrix = sparse_matrix.fillna(0).to_numpy()
         self.item_n, self.user_n = sparse_matrix.shape
         self.K = K
         self.lr = lr
@@ -32,18 +33,15 @@ class SGD:
         self.total_mean = np.mean(self.sparse_matrix[np.where(self.sparse_matrix != 0)])
 
         # Create training Samples
-        self.samples = [
-            (i, j)
-            for i in range(self.item_n)
-            for j in range(self.user_n)
-            if self.sparse_matrix[i, j] > 0
-        ]
+        idx, jdx = self.sparse_matrix.nonzero()
+        samples = list(zip(idx, jdx))
 
         training_log = []
-        for i in range(self.n_epochs):
-            np.random.shuffle(self.samples)
+        progress = trange(self.n_epochs, desc="train-rmse: nan")
+        for idx in progress:
+            np.random.shuffle(samples)
 
-            for i, u in self.samples:
+            for i, u in samples:
                 # get error
                 y = self.sparse_matrix[i, u]
                 pred = self.predict(i, u)
@@ -52,13 +50,14 @@ class SGD:
                 self.item_bias[i] += self.lr * (error - self.beta * self.item_bias[i])
                 self.user_bias[u] += self.lr * (error - self.beta * self.user_bias[u])
                 # update latent factors
-                I_i = self.I[i:][:]
+                I_i = self.I[i,:][:]
                 self.I[i, :] += self.lr * (error * self.U[u,:] - self.beta * self.I[i,:])
                 self.U[u, :] += self.lr * (error * I_i - self.beta * self.U[u,:])
 
             rmse = self.evaluate()
-            print(f"epoch {i} RMSE:", rmse)
-            training_log.append((i, rmse))
+            progress.set_description("train-rmse: %0.6f" % rmse)
+            progress.refresh()
+            training_log.append((idx, rmse))
 
         self.pred_matrix =  self.get_pred_matrix()
 
@@ -70,8 +69,8 @@ class SGD:
         """
         return (
             self.total_mean
-            + self.item_bias[i],
-            + self.user_bias[u],
+            + self.item_bias[i]
+            + self.user_bias[u]
             + self.U[u,:].dot(self.I[i,:].T)
         )
 
@@ -88,8 +87,8 @@ class SGD:
         pred_matrix = self.get_pred_matrix()
         ys, preds = [], []
         for i, j in zip(idx, jdx):
-            ys.append(self.sparse_matrix.iloc[i, j])
-            preds.append(pred_matrix.iloc[i, j])
+            ys.append(self.sparse_matrix[i, j])
+            preds.append(pred_matrix[i, j])
 
         error = mean_squared_error(ys, preds)
         return np.sqrt(error)

@@ -6,6 +6,11 @@ from sklearn.metrics import mean_squared_error
 class SVD:
 
     def __init__(self, sparse_matrix, K):
+        """
+        Arguments
+        - sparse_matrix : user-item rating matrix
+        - K (int)       : number of latent dimensions
+        """
         self.sparse_matrix = sparse_matrix
         self.K = K
         self.init_sparse_matrix()
@@ -41,7 +46,6 @@ class SVD:
         return item_factors, user_factors
 
     def evaluate(self):
-        print("Evaluating...")
         idx, jdx = self.sparse_matrix.to_numpy().nonzero()
         ys, preds = [], []
         for i, j in zip(idx, jdx):
