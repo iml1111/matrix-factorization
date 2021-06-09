@@ -55,3 +55,12 @@ class SVD:
         error = mean_squared_error(ys, preds)
         return np.sqrt(error)
 
+    def test_evaluate(self, test_set):
+        ys, preds = [], []
+        for i, j, rating in test_set:
+            ys.append(rating)
+            preds.append(self.pred_matrix.iloc[i, j])
+
+        error = mean_squared_error(ys, preds)
+        return np.sqrt(error)
+

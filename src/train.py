@@ -15,7 +15,7 @@ def define_argparser():
     p.add_argument(
         '--n_epochs',
         type=int,
-        default=20,
+        default=200,
         help='num of Iterations'
     )
     p.add_argument(
@@ -38,7 +38,7 @@ def define_argparser():
     p.add_argument(
         '--sgd',
         action='store_true',
-        help='Use SGD Algorithm'
+        help='Use SGD Algorithm.'
     )
 
     return p.parse_args()
@@ -48,8 +48,9 @@ def main(config):
     pprint(vars(config))
     ratings_df = get_movielens('ratings.csv')
     print("Rating set shape:", ratings_df.shape)
-    sparse_matrix = make_sparse_matrix(ratings_df)
+    sparse_matrix, test_set = make_sparse_matrix(ratings_df)
     print("Sparse Matrix shape:", sparse_matrix.shape)
+    print("Test set length:", len(test_set))
 
     if config.svd:
         trainer = SVD(sparse_matrix, config.k)
@@ -65,7 +66,8 @@ def main(config):
         raise RuntimeError('Algorithm No Selected')
 
     trainer.train()
-    print("Last RMSE:", trainer.evaluate())
+    print("train RMSE:", trainer.evaluate())
+    print("test RMSE:", trainer.test_evaluate(test_set))
 
 
 if __name__ == '__main__':

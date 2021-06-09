@@ -92,3 +92,20 @@ class SGD:
 
         error = mean_squared_error(ys, preds)
         return np.sqrt(error)
+
+    def test_evaluate(self, test_set):
+        pred_matrix = self.get_pred_matrix()
+        ys, preds = [], []
+        for i, j, rating in test_set:
+            ys.append(rating)
+            preds.append(pred_matrix[i, j])
+
+        error = mean_squared_error(ys, preds)
+        return np.sqrt(error)
+
+
+
+
+
+
+
