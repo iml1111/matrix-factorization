@@ -58,13 +58,13 @@ MF는 다음과 같은 알고리즘으로 구현되어 있습니다.
 
 ![image](https://user-images.githubusercontent.com/29897277/121314621-7dc4b500-c942-11eb-88f7-95cc7e42983f.png)
 
-특이값 분해(SVD) 알고리즘은, User와 Item 간의 평가 지표를 기록한 Review Matrix를 위 규격에 맞게 분해한 후, 
+특이값 분해(SVD) 알고리즘은, User와 Item 간의 평가 지표를 기록한 Rating Matrix를 위 규격에 맞게 분해한 후, 
 
 분해된 각 matrix를 입력받은 하이퍼 파라미터 K를 따라 절단된 SVD(Truncated SVD) 형태로 행렬을 잘라냅니다.
 
-그 후, 다시 Review Matrix의 Shape에 맞춰 행렬을 복원해줌으로써, predict matrix를 생성합니다.
+그 후, 다시 Rating Matrix의 Shape에 맞춰 행렬을 복원해줌으로써, predict matrix를 생성합니다.
 
-K를 크게 잡으면 기존의 Review Matrix로부터 다양한 의미를 가져갈 수 있지만, K를 작게 잡아야만 핵심적인 정보외의 노이즈를 제거할 수 있습니다.
+K를 크게 잡으면 기존의 Rating Matrix로부터 다양한 의미를 가져갈 수 있지만, K를 작게 잡아야만 핵심적인 정보외의 노이즈를 제거할 수 있습니다.
 
 **matrix를 절단시키는 것으로, 설명력이 낮은 정보를 삭제하고 설명력이 높은 정보를 남긴다는 방향성으로 평가를 예측**하게 됩니다.
 
@@ -76,7 +76,7 @@ K를 크게 잡으면 기존의 Review Matrix로부터 다양한 의미를 가�
 
 ![image](https://user-images.githubusercontent.com/29897277/121320693-596bd700-c948-11eb-92bc-418e51b2f805.png)
 
-User Latent Matrix와 Item Latent Matrix를 내적을 통해, 기존의 Review Matrix를 유사하게 재현하는 알고리즘입니다. 사용된 최적화 알고리즘은 SGD(Stochastic Gradient Descent)이며, 매 epoch마다 Latent Matrix를 통해 Predict Matrix를 기반으로 기존의 Review Matrix와의 Loss 값으로 최적화를 수행합니다. 
+User Latent Matrix와 Item Latent Matrix를 내적을 통해, 기존의 Rating Matrix를 유사하게 재현하는 알고리즘입니다. 사용된 최적화 알고리즘은 SGD(Stochastic Gradient Descent)이며, 매 epoch마다 Latent Matrix를 통해 Predict Matrix를 기반으로 기존의 Rating Matrix와의 Loss 값으로 최적화를 수행합니다. 
 
 
 
