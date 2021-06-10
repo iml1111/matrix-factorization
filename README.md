@@ -76,7 +76,7 @@ K를 크게 잡으면 기존의 Rating Matrix로부터 다양한 의미를 가�
 
 ![image](https://user-images.githubusercontent.com/29897277/121320693-596bd700-c948-11eb-92bc-418e51b2f805.png)
 
-User Latent Matrix와 Item Latent Matrix를 내적을 통해, 기존의 Rating Matrix를 유사하게 재현하는 알고리즘입니다. 사용된 최적화 알고리즘은 SGD(Stochastic Gradient Descent)이며, 매 epoch마다 Latent Matrix를 통해 Predict Matrix를 기반으로 기존의 Rating Matrix와의 Loss 값으로 최적화를 수행합니다. 
+User Latent Matrix와 Item Latent Matrix를 행렬곱을 통해, 기존의 Rating Matrix를 유사하게 재현하는 알고리즘입니다. 사용된 최적화 알고리즘은 SGD(Stochastic Gradient Descent)이며, 매 epoch마다 Latent Matrix를 통해 Predict Matrix를 기반으로 기존의 Rating Matrix와의 Loss 값으로 최적화를 수행합니다. 
 
 
 
